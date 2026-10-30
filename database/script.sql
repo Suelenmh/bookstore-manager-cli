@@ -141,3 +141,55 @@ SELECT * FROM autores;
 SELECT * FROM livros;
 SELECT * FROM clientes;
 SELECT * FROM emprestimos;
+
+
+-- =====================================================
+-- 3) RELATÓRIOS (CONSULTAS)
+-- =====================================================
+
+-- Relatório 1: livros disponíveis (INNER JOIN + ORDER BY)
+SELECT l.id, l.titulo, a.nome AS autor, l.quantidade_disponivel
+FROM livros l
+INNER JOIN autores a ON a.id = l.autor_id
+WHERE l.quantidade_disponivel > 0
+ORDER BY l.titulo;
+
+-- Relatório 2: livros emprestados no momento (INNER JOIN)
+SELECT l.titulo, c.nome AS cliente, e.data_emprestimo, e.data_devolucao_prevista
+FROM emprestimos e
+INNER JOIN livros l   ON l.id = e.livro_id
+INNER JOIN clientes c ON c.id = e.cliente_id
+WHERE e.status = 'ATIVO'
+ORDER BY e.data_emprestimo;
+
+-- Relatório 3: livros cadastrados por autor (LEFT JOIN + GROUP BY + COUNT)
+SELECT a.nome AS autor, COUNT(l.id) AS total_livros
+FROM autores a
+LEFT JOIN livros l ON l.autor_id = a.id
+GROUP BY a.nome
+ORDER BY total_livros DESC, a.nome;
+
+-- Relatório 4: quantidade de empréstimos por livro (LEFT JOIN + GROUP BY + LIMIT)
+SELECT l.titulo, COUNT(e.id) AS total_emprestimos
+FROM livros l
+LEFT JOIN emprestimos e ON e.livro_id = l.id
+GROUP BY l.titulo
+ORDER BY total_emprestimos DESC, l.titulo
+LIMIT 5;
+
+-- Relatório 5: clientes com empréstimos ativos (INNER JOIN + GROUP BY + COUNT)
+SELECT c.nome AS cliente, COUNT(e.id) AS emprestimos_ativos
+FROM clientes c
+INNER JOIN emprestimos e ON e.cliente_id = c.id
+WHERE e.status = 'ATIVO'
+GROUP BY c.nome
+ORDER BY emprestimos_ativos DESC, c.nome;
+
+-- Relatório extra (diferencial): total de exemplares por autor (SUM)
+SELECT a.nome AS autor,
+       SUM(l.quantidade_total) AS exemplares_total,
+       SUM(l.quantidade_disponivel) AS exemplares_disponiveis
+FROM autores a
+INNER JOIN livros l ON l.autor_id = a.id
+GROUP BY a.nome
+ORDER BY exemplares_total DESC;
