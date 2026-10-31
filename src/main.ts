@@ -9,6 +9,10 @@ import { MenuAutores } from "./menus/MenuAutores";
 import { MenuLivros } from "./menus/MenuLivros";
 import { MenuPrincipal } from "./menus/MenuPrincipal";
 import { fecharEntrada } from "./utils/entrada";
+import { ClienteRepository } from "./repositories/ClienteRepository";
+import { ClienteService } from "./services/ClienteService";
+import { ClienteController } from "./controllers/ClienteController";
+import { MenuClientes } from "./menus/MenuClientes";
 
 async function main(): Promise<void> {
   try {
@@ -23,7 +27,10 @@ async function main(): Promise<void> {
     const menuAutores = new MenuAutores(new AutorController(autorService));
     const menuLivros = new MenuLivros(new LivroController(livroService, autorService));
 
-    const menu = new MenuPrincipal(menuAutores, menuLivros);
+    const clienteRepository = new ClienteRepository(dados.clientes);
+    const clienteService = new ClienteService(clienteRepository);
+    const menuClientes = new MenuClientes(new ClienteController(clienteService));
+    const menu = new MenuPrincipal(menuAutores, menuLivros, menuClientes);
     await menu.exibir();
   } catch (erro) {
     console.error("Erro inesperado:", erro);
