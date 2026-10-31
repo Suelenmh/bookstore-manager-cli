@@ -1,5 +1,5 @@
 import { AutorController } from "../controllers/AutorController";
-import { AppError } from "../utils/AppError";
+import { tratarErro } from "../utils/tratarErro";
 import { perguntar, pausar } from "../utils/entrada";
 import { exibirTitulo, exibirErro } from "../utils/mensagens";
 
@@ -47,14 +47,9 @@ export class MenuAutores {
             continue;
         }
       } catch (erro) {
-        if (erro instanceof AppError) {
-          exibirErro(erro.message);
-        } else {
-          exibirErro("Ocorreu um erro inesperado.");
-          console.error(erro);
-        }
+        tratarErro(erro);
+      }
       }
       await pausar();
     }
   }
-}
