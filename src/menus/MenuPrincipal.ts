@@ -1,7 +1,10 @@
+import { MenuAutores } from "./MenuAutores";
 import { perguntar, pausar } from "../utils/entrada";
 import { exibirTitulo, exibirErro } from "../utils/mensagens";
 
 export class MenuPrincipal {
+  constructor(private readonly menuAutores: MenuAutores) {}
+
   async exibir(): Promise<void> {
     let executando = true;
 
@@ -17,6 +20,8 @@ export class MenuPrincipal {
 
       switch (opcao) {
         case "1":
+          await this.menuAutores.exibir();
+          break;
         case "2":
         case "3":
         case "4":
