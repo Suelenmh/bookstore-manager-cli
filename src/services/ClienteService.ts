@@ -3,9 +3,13 @@ import { DadosCliente } from "../models/DadosCliente";
 import { ClienteRepository } from "../repositories/ClienteRepository";
 import { AppError } from "../utils/AppError";
 import { apenasDigitos, emailValido } from "../utils/validacoes";
+import { EmprestimoRepository } from "../repositories/EmprestimoRepository";
 
 export class ClienteService {
-  constructor(private readonly clienteRepository: ClienteRepository) {}
+   constructor(
+    private readonly clienteRepository: ClienteRepository,
+    private readonly emprestimoRepository: EmprestimoRepository
+  ) {}
 
   async cadastrar(dados: DadosCliente): Promise<Cliente> {
     const cpf = apenasDigitos(dados.cpf);
@@ -49,6 +53,13 @@ export class ClienteService {
 
   async remover(id: number): Promise<void> {
     await this.buscarPorId(id);
+
+    const emprestimos = await this.emprestimoRepository.listarPorCliente(id);
+    if (emprestimos.length > 0) {
+      throw new AppError(
+        `Não é possível remover: o cliente possui ${emprestimos.length} empréstimo(s) registrado(s).`
+      );
+    }
     await this.clienteRepository.remover(id);
   }
 

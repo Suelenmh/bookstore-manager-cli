@@ -3,11 +3,13 @@ import { DadosLivro } from "../models/DadosLivro";
 import { LivroRepository } from "../repositories/LivroRepository";
 import { AutorService } from "./AutorService";
 import { AppError } from "../utils/AppError";
+import { EmprestimoRepository } from "../repositories/EmprestimoRepository";
 
 export class LivroService {
-  constructor(
+   constructor(
     private readonly livroRepository: LivroRepository,
-    private readonly autorService: AutorService
+    private readonly autorService: AutorService,
+    private readonly emprestimoRepository: EmprestimoRepository
   ) {}
 
   async cadastrar(dados: DadosLivro): Promise<Livro> {
@@ -61,9 +63,28 @@ export class LivroService {
     return this.livroRepository.salvar(livro);
   }
 
-  async remover(id: number): Promise<void> {
+   async remover(id: number): Promise<void> {
     await this.buscarPorId(id);
+
+    const emprestimos = await this.emprestimoRepository.listarPorLivro(id);
+    if (emprestimos.length > 0) {
+      throw new AppError(
+        `Não é possível remover: o livro possui ${emprestimos.length} empréstimo(s) registrado(s).`
+      );
+    }
     await this.livroRepository.remover(id);
+  }
+
+    async retirarExemplar(id: number): Promise<void> {
+    const livro = await this.buscarPorId(id);
+    livro.retirarExemplar();
+    await this.livroRepository.salvar(livro);
+  }
+
+  async devolverExemplar(id: number): Promise<void> {
+    const livro = await this.buscarPorId(id);
+    livro.devolverExemplar();
+    await this.livroRepository.salvar(livro);
   }
 
   private async garantirIsbnUnico(isbn: string, idIgnorado?: number): Promise<void> {
