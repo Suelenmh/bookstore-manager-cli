@@ -1,9 +1,13 @@
 import { MenuAutores } from "./MenuAutores";
 import { perguntar, pausar } from "../utils/entrada";
 import { exibirTitulo, exibirErro } from "../utils/mensagens";
+import { MenuLivros } from "./MenuLivros";
 
 export class MenuPrincipal {
-  constructor(private readonly menuAutores: MenuAutores) {}
+   constructor(
+    private readonly menuAutores: MenuAutores,
+    private readonly menuLivros: MenuLivros
+  ) {}
 
   async exibir(): Promise<void> {
     let executando = true;
@@ -23,6 +27,8 @@ export class MenuPrincipal {
           await this.menuAutores.exibir();
           break;
         case "2":
+          await this.menuLivros.exibir();
+          break;
         case "3":
         case "4":
           console.log("\nMódulo em construção...");
