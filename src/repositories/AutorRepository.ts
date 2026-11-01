@@ -41,7 +41,7 @@ export class AutorRepository implements IRepository<Autor> {
     return this.autores.length < tamanhoAntes;
   }
 
-  gerarProximoId(): number {
+    async gerarProximoId(): Promise<number> {
     return this.proximoId++;
   }
 }

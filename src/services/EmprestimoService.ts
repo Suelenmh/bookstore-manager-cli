@@ -33,7 +33,7 @@ export class EmprestimoService {
 
     const hoje = dataHoje();
     const emprestimo = new Emprestimo(
-      this.emprestimoRepository.gerarProximoId(),
+      await this.emprestimoRepository.gerarProximoId(),
       livroId,
       clienteId,
       hoje,

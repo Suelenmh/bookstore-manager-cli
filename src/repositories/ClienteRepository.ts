@@ -43,7 +43,7 @@ export class ClienteRepository implements IRepository<Cliente> {
     return this.clientes.length < tamanhoAntes;
   }
 
-  gerarProximoId(): number {
+    async gerarProximoId(): Promise<number> {
     return this.proximoId++;
   }
 }

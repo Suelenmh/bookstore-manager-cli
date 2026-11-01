@@ -49,7 +49,7 @@ export class EmprestimoRepository implements IRepository<Emprestimo> {
     return this.emprestimos.length < tamanhoAntes;
   }
 
-  gerarProximoId(): number {
+  async gerarProximoId(): Promise<number> {
     return this.proximoId++;
   }
 }

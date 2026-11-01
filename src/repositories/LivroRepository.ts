@@ -43,7 +43,7 @@ export class LivroRepository implements IRepository<Livro> {
     return this.livros.length < tamanhoAntes;
   }
 
-  gerarProximoId(): number {
+  async gerarProximoId(): Promise<number> {
     return this.proximoId++;
   }
 }

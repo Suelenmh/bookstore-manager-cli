@@ -17,7 +17,7 @@ export class ClienteService {
     await this.garantirUnicidade(dados.email, cpf);
 
     const cliente = new Cliente(
-      this.clienteRepository.gerarProximoId(),
+      await this.clienteRepository.gerarProximoId(),
       dados.nome,
       dados.email,
       cpf,

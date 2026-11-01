@@ -3,5 +3,5 @@ export interface IRepository<T> {
   buscarPorId(id: number): Promise<T | undefined>;
   salvar(entidade: T): Promise<T>;
   remover(id: number): Promise<boolean>;
-  gerarProximoId(): number;
+  gerarProximoId(): Promise<number>;
 }

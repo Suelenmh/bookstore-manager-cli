@@ -20,7 +20,7 @@ export class AutorService {
       throw new AppError(`Já existe um autor cadastrado com o nome "${nome}".`);
     }
 
-    const id = this.autorRepository.gerarProximoId();
+    const id = await this.autorRepository.gerarProximoId();
     const autor = new Autor(id, nome, nacionalidade, dataNascimento);
     return this.autorRepository.salvar(autor);
   }

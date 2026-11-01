@@ -18,7 +18,7 @@ export class LivroService {
     await this.garantirIsbnUnico(dados.isbn);
 
     const livro = new Livro(
-      this.livroRepository.gerarProximoId(),
+      await this.livroRepository.gerarProximoId(),
       dados.titulo,
       dados.isbn,
       dados.anoPublicacao,
